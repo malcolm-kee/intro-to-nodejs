@@ -1,6 +1,6 @@
 const fs = require('fs/promises');
 const path = require('path');
-const readCsv = require('./read-csv');
+const { readCsv } = require('./read-csv');
 
 (async function getEmails() {
   const args = process.argv.slice(2);

@@ -7,4 +7,5 @@ async function readCsv(filePath, hasHeader = true) {
   return hasHeader ? rows.slice(1) : rows;
 }
 
-module.exports = readCsv;
+// module.exports = readCsv;
+exports.readCsv = readCsv;
