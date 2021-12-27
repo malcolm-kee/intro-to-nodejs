@@ -10,19 +10,15 @@ const path = require('path');
   try {
     const input = path.resolve(__dirname, 'data.csv');
 
-    const data = await fs.readFile(input, 'utf-8');
-
-    const rows = data.split('\n');
+    const rows = await readCsv(input);
 
     const emails = [];
 
-    rows.forEach((row, index) => {
-      if (index !== 0) {
-        if (row.includes(`,${gender},`)) {
-          const email = row.split(',').pop();
+    rows.forEach((row) => {
+      if (row.includes(`,${gender},`)) {
+        const email = row.split(',').pop();
 
-          emails.push(email);
-        }
+        emails.push(email);
       }
     });
 
@@ -34,3 +30,10 @@ const path = require('path');
     console.error(err);
   }
 })();
+
+async function readCsv(filePath, hasHeader = true) {
+  const data = await fs.readFile(filePath, 'utf-8');
+  const rows = data.split('\n');
+
+  return hasHeader ? rows.slice(1) : rows;
+}
