@@ -1,26 +1,26 @@
-const fs = require('fs');
+const fs = require('fs/promises');
 
-fs.readFile('data.csv', 'utf-8', (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
+(async function getEmails() {
+  try {
+    const data = await fs.readFile('data.csv', 'utf-8');
 
-  const rows = data.split('\n');
+    const rows = data.split('\n');
 
-  const emails = [];
+    const emails = [];
 
-  rows.forEach((row, index) => {
-    if (index !== 0) {
-      if (row.includes(',F,')) {
-        const email = row.split(',').pop();
+    rows.forEach((row, index) => {
+      if (index !== 0) {
+        if (row.includes(',F,')) {
+          const email = row.split(',').pop();
 
-        emails.push(email);
+          emails.push(email);
+        }
       }
-    }
-  });
+    });
 
-  fs.writeFile('female-emails.txt', emails.join('\n'), 'utf-8', () => {
+    await fs.writeFile('female-emails.txt', emails.join('\n'), 'utf-8');
     console.log(`Done collecting ${emails.length} emails.`);
-  });
-});
+  } catch (err) {
+    console.error(err);
+  }
+})();
