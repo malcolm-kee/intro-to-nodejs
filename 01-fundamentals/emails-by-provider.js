@@ -1,5 +1,5 @@
 const fs = require('fs/promises');
-const path = require('path');
+const { getEmailsByProvider } = require('./get-emails-by-provider');
 
 (async function emailsByProvider() {
   const provider = process.argv[2] || 'gmail';
@@ -10,23 +10,7 @@ const path = require('path');
   }
 
   try {
-    const dataFilePath = path.resolve(__dirname, 'data.csv');
-
-    const data = await fs.readFile(dataFilePath, 'utf-8');
-
-    const lines = data.split('\n');
-
-    const emails = [];
-
-    lines.forEach((line, index) => {
-      if (index !== 0) {
-        const email = line.split(',').pop();
-
-        if (email.endsWith(`@${provider}.com`)) {
-          emails.push(email);
-        }
-      }
-    });
+    const emails = await getEmailsByProvider(provider);
 
     await fs.writeFile(`${provider}.txt`, emails.join('\n'), 'utf-8');
   } catch (err) {
