@@ -1,5 +1,6 @@
 const fs = require('fs/promises');
 const path = require('path');
+const readCsv = require('./read-csv');
 
 (async function getEmails() {
   const args = process.argv.slice(2);
@@ -30,10 +31,3 @@ const path = require('path');
     console.error(err);
   }
 })();
-
-async function readCsv(filePath, hasHeader = true) {
-  const data = await fs.readFile(filePath, 'utf-8');
-  const rows = data.split('\n');
-
-  return hasHeader ? rows.slice(1) : rows;
-}
