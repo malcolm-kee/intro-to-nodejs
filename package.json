@@ -1,0 +1,22 @@
+{
+  "name": "intro-to-nodejs",
+  "version": "1.0.0",
+  "description": "Materials for introduction to Node.js.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/malcolm-kee/intro-to-nodejs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/malcolm-kee/intro-to-nodejs/issues"
+  },
+  "homepage": "https://github.com/malcolm-kee/intro-to-nodejs#readme",
+  "dependencies": {
+    "csv-parse": "^5.0.3"
+  }
+}

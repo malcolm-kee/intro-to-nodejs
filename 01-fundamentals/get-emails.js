@@ -1,6 +1,18 @@
 const fs = require('fs/promises');
 const path = require('path');
-const { readCsv } = require('./read-csv');
+const { parse } = require('csv-parse');
+
+function parseCsv(string) {
+  return new Promise((resolve, reject) => {
+    parse(string, { columns: true }, (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
 
 (async function getEmails() {
   const args = process.argv.slice(2);
@@ -11,15 +23,15 @@ const { readCsv } = require('./read-csv');
   try {
     const input = path.resolve(__dirname, 'data.csv');
 
-    const rows = await readCsv(input);
+    const raw = await fs.readFile(input, 'utf-8');
+
+    const rows = await parseCsv(raw);
 
     const emails = [];
 
     rows.forEach((row) => {
-      if (row.includes(`,${gender},`)) {
-        const email = row.split(',').pop();
-
-        emails.push(email);
+      if (row.Gender === gender) {
+        emails.push(row.Email);
       }
     });
 
