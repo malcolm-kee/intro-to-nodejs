@@ -6,7 +6,8 @@
     "get-emails:female": "node 01-fundamentals/get-emails.js F female-emails.txt",
     "get-emails:male": "node 01-fundamentals/get-emails.js M male-emails.txt",
     "format": "prettier --write 01-fundamentals",
-    "format:check": "prettier --check 01-fundamentals"
+    "format:check": "prettier --check 01-fundamentals",
+    "emails:yahoo": "node 01-fundamentals/emails-by-provider.js yahoo"
   },
   "repository": {
     "type": "git",
