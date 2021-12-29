@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Materials for introduction to Node.js.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "get-emails:female": "node 01-fundamentals/get-emails.js F female-emails.txt",
+    "get-emails:male": "node 01-fundamentals/get-emails.js M male-emails.txt"
   },
   "repository": {
     "type": "git",
