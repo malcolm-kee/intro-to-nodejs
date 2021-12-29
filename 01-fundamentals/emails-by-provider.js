@@ -12,7 +12,7 @@ const { getEmailsByProvider } = require('./get-emails-by-provider');
   try {
     const emails = await getEmailsByProvider(provider);
 
-    await fs.writeFile(`${provider}.txt`, emails.join('\n'), 'utf-8');
+    await fs.writeFile(`${provider}.txt`, emails.join('\n\n'), 'utf-8');
   } catch (err) {
     console.error(err);
   }
