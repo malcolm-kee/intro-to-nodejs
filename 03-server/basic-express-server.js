@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+
 app.get('/', (req, res) => {
   res.end('Hello World');
 });
@@ -12,6 +14,7 @@ app.get('/end', (req, res) => {
 app.post('/end', (req, res) => {
   res.json({
     message: 'bye',
+    sent: req.body,
   });
 });
 
