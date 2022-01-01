@@ -1,6 +1,15 @@
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+
+app.post('/echo', (req, res) => {
+  return res.json({
+    ok: true,
+    payload: req.body,
+  });
+});
+
 app.all('*', (req, res) => {
   const accept = req.headers.accept;
 
