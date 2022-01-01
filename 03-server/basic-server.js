@@ -7,22 +7,31 @@ const server = http.createServer((req, res) => {
 
   if (req.url === '/end') {
     if (req.method === 'POST') {
-      // TODO: get post data
-      res.writeHead(200, {
-        'Content-Type': 'application/json',
+      let data = '';
+
+      req.on('data', (chunk) => {
+        data += chunk;
       });
-      return res.end(
-        JSON.stringify({
-          message: 'Bye',
-        })
-      );
+
+      req.on('end', () => {
+        const bodyData = JSON.parse(data);
+        res.writeHead(200, {
+          'Content-Type': 'application/json',
+        });
+        return res.end(
+          JSON.stringify({
+            message: 'Bye',
+            sent: bodyData,
+          })
+        );
+      });
     } else {
       return res.end('Bye!');
     }
+  } else {
+    res.writeHead(404);
+    res.end(`Not Found`);
   }
-
-  res.writeHead(404);
-  res.end(`Not Found`);
 });
 
 server.listen(7889, () => {
