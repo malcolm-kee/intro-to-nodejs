@@ -30,6 +30,33 @@ app.post('/movies', (req, res) => {
   res.status(201).json(movie);
 });
 
+app.get('/movies/:id', (req, res) => {
+  const movie = movies.find((movie) => movie.id === Number(req.params.id));
+
+  if (!movie) {
+    return res.status(404).json({
+      error: 'Not found',
+    });
+  }
+
+  return res.json(movie);
+});
+
+app.all('*', (req, res) => {
+  if (req.headers.accept === 'application/json') {
+    return res.status(404).json({
+      error: 'Not found',
+    });
+  }
+
+  return res.status(404).send(`<!DOCTYPE html>
+  <html>
+    <body>
+        <h1>Page Not Found</h1>
+    </body>
+    </html>`);
+});
+
 app.listen(8999, () => {
   console.log('movie api started at http://localhost:8999');
 });
