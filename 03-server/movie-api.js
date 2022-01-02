@@ -1,6 +1,13 @@
 const express = require('express');
 const app = express();
 
+const loggerMiddleware = (req, res, next) => {
+  console.log(`[${req.method}] ${req.url}`);
+
+  next();
+};
+
+app.use(loggerMiddleware);
 app.use(express.json());
 
 const movies = [];
