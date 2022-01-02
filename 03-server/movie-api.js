@@ -28,7 +28,7 @@ const movies = [];
 let _id = 0;
 
 app.get('/movies', (req, res) => {
-  res.json(movies[0].id);
+  res.json(movies);
 });
 
 app.post('/movies', blockFaultyWords, (req, res) => {
