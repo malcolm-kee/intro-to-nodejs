@@ -7,6 +7,18 @@ const loggerMiddleware = (req, res, next) => {
   next();
 };
 
+const hasFaultyWords = (text) => text.toLowerCase().includes('shit');
+
+const blockFaultyWords = (req, res, next) => {
+  if (req.body && hasFaultyWords(JSON.stringify(req.body))) {
+    return res.status(400).json({
+      message: 'No faulty language please.',
+    });
+  }
+
+  next();
+};
+
 app.use(loggerMiddleware);
 app.use(express.json());
 
@@ -16,7 +28,7 @@ let _id = 0;
 
 app.get('/movies', (req, res) => res.json(movies));
 
-app.post('/movies', (req, res) => {
+app.post('/movies', blockFaultyWords, (req, res) => {
   const { title, language } = req.body;
 
   if (!title || !language) {
