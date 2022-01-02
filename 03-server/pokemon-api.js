@@ -6,8 +6,29 @@ const loggerMiddleware = (req, res, next) => {
   next();
 };
 
+const jsonBodyMiddleware = (req, res, next) => {
+  if (req.headers['content-type'] === 'application/json') {
+    let data = '';
+
+    req.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    req.on('end', () => {
+      const bodyData = JSON.parse(data);
+
+      req.body = bodyData;
+
+      next();
+    });
+  } else {
+    next();
+  }
+};
+
 app.use(loggerMiddleware);
-app.use(express.json());
+// app.use(express.json());
+app.use(jsonBodyMiddleware);
 
 const pokemons = [];
 let _id = 0;
