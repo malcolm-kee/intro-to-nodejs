@@ -1,4 +1,5 @@
 const express = require('express');
+const fs = require('fs/promises');
 const app = express();
 
 const loggerMiddleware = (req, res, next) => {
@@ -26,7 +27,9 @@ const movies = [];
 
 let _id = 0;
 
-app.get('/movies', (req, res) => res.json(movies));
+app.get('/movies', (req, res) => {
+  res.json(movies[0].id);
+});
 
 app.post('/movies', blockFaultyWords, (req, res) => {
   const { title, language } = req.body;
@@ -75,6 +78,22 @@ app.all('*', (req, res) => {
     </body>
     </html>`);
 });
+
+const saveErrorToLogsFile = (err, req, res, next) => {
+  console.error(err);
+
+  fs.appendFile(
+    'error.log',
+    `[${new Date().toLocaleString()}] ${err}${
+      err.stack ? `|${err.stack}` : ''
+    }\n`,
+    'utf-8'
+  ).then(() => {
+    next(err);
+  });
+};
+
+app.use(saveErrorToLogsFile);
 
 app.listen(8999, () => {
   console.log('movie api started at http://localhost:8999');
