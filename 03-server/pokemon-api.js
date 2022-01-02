@@ -1,6 +1,12 @@
 const express = require('express');
 const app = express();
 
+const loggerMiddleware = (req, res, next) => {
+  console.log(`[${req.method}] ${req.url} at ${new Date().toLocaleString()}`);
+  next();
+};
+
+app.use(loggerMiddleware);
 app.use(express.json());
 
 const pokemons = [];
