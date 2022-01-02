@@ -1,3 +1,4 @@
+const fs = require('fs/promises');
 const express = require('express');
 const app = express();
 
@@ -78,6 +79,12 @@ app.all('*', (req, res) =>
     message: 'Not found',
   })
 );
+
+function saveErrorToLogs(err, req, res, next) {
+  fs.appendFile('error.log', `${err}\n`, 'utf-8').then(() => next(err));
+}
+
+app.use(saveErrorToLogs);
 
 app.listen(8999, () =>
   console.log('Pokemon api started at http://localhost:8999')
