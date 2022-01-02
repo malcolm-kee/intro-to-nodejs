@@ -28,13 +28,13 @@ const dataFile = path.resolve(__dirname, 'movies.json');
 
 let _id = 0;
 
-app.get('/movies', (req, res) => {
-  fs.readFile(dataFile, 'utf-8').then((result) =>
-    res.json(JSON.parse(result) || [])
-  );
+app.get('/movies', (req, res, next) => {
+  fs.readFile(dataFile, 'utf-8')
+    .then((result) => res.json(JSON.parse(result) || []))
+    .catch((err) => next(err));
 });
 
-app.post('/movies', blockFaultyWords, (req, res) => {
+app.post('/movies', blockFaultyWords, (req, res, next) => {
   const { title, language } = req.body;
 
   if (!title || !language) {
@@ -56,10 +56,11 @@ app.post('/movies', blockFaultyWords, (req, res) => {
     .then((movies) =>
       fs.writeFile(dataFile, JSON.stringify(movies.concat(movie)), 'utf-8')
     )
-    .then(() => res.status(201).json(movie));
+    .then(() => res.status(201).json(movie))
+    .catch((err) => next(err));
 });
 
-app.get('/movies/:id', (req, res) => {
+app.get('/movies/:id', (req, res, next) => {
   fs.readFile(dataFile, 'utf-8')
     .then((raw) => JSON.parse(raw))
     .then((movies) => {
@@ -71,7 +72,8 @@ app.get('/movies/:id', (req, res) => {
       }
 
       return res.json(movie);
-    });
+    })
+    .catch((err) => next(err));
 });
 
 app.all('*', (req, res) => {
