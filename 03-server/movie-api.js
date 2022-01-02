@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs/promises');
+const path = require('path');
 const app = express();
 
 const loggerMiddleware = (req, res, next) => {
@@ -23,12 +24,14 @@ const blockFaultyWords = (req, res, next) => {
 app.use(loggerMiddleware);
 app.use(express.json());
 
-const movies = [];
+const dataFile = path.resolve(__dirname, 'movies.json');
 
 let _id = 0;
 
 app.get('/movies', (req, res) => {
-  res.json(movies);
+  fs.readFile(dataFile, 'utf-8').then((result) =>
+    res.json(JSON.parse(result) || [])
+  );
 });
 
 app.post('/movies', blockFaultyWords, (req, res) => {
@@ -47,21 +50,28 @@ app.post('/movies', blockFaultyWords, (req, res) => {
     title,
     language,
   };
-  movies.push(movie);
 
-  res.status(201).json(movie);
+  fs.readFile(dataFile, 'utf-8')
+    .then((raw) => JSON.parse(raw))
+    .then((movies) =>
+      fs.writeFile(dataFile, JSON.stringify(movies.concat(movie)), 'utf-8')
+    )
+    .then(() => res.status(201).json(movie));
 });
 
 app.get('/movies/:id', (req, res) => {
-  const movie = movies.find((movie) => movie.id === Number(req.params.id));
+  fs.readFile(dataFile, 'utf-8')
+    .then((raw) => JSON.parse(raw))
+    .then((movies) => {
+      const movie = movies.find((movie) => movie.id === Number(req.params.id));
+      if (!movie) {
+        return res.status(404).json({
+          error: 'Not found',
+        });
+      }
 
-  if (!movie) {
-    return res.status(404).json({
-      error: 'Not found',
+      return res.json(movie);
     });
-  }
-
-  return res.json(movie);
 });
 
 app.all('*', (req, res) => {
