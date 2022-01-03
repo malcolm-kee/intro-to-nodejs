@@ -1,19 +1,10 @@
 const express = require('express');
 const movieService = require('./movie.service');
+const {
+  blockFaultyWords,
+} = require('../middleware/block-fault-words.middleware');
 
 const movieController = express.Router();
-
-const hasFaultyWords = (text) => text.toLowerCase().includes('shit');
-
-const blockFaultyWords = (req, res, next) => {
-  if (req.body && hasFaultyWords(JSON.stringify(req.body))) {
-    return res.status(400).json({
-      message: 'No faulty language please.',
-    });
-  }
-
-  next();
-};
 
 movieController.get('/', (req, res, next) => {
   movieService
