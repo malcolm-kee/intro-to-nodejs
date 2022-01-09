@@ -7,6 +7,15 @@ const { loggerMiddleware } = require('./middleware/logger.middleware');
 const {
   saveErrorToLogFile,
 } = require('./error-handler/save-error-to-log-file');
+const { query } = require('./db');
+
+query('SELECT * FROM students;', [], (err, result) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  console.log('rows', result.rows);
+});
 
 app.use(loggerMiddleware);
 app.use(express.json());
