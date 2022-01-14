@@ -5,15 +5,19 @@ const { query } = require('../db');
 
 const dataFile = path.resolve(__dirname, 'movies.json');
 
-const getMovies = () => {
+const getMovies = ({ limit = 10, offset = 0 } = {}) => {
   return new Promise((fulfill, reject) => {
-    query('SELECT * FROM movies', [], (err, result) => {
-      if (err) {
-        reject(err);
-        return;
+    query(
+      'SELECT * FROM movies LIMIT $1 OFFSET $2',
+      [limit, offset],
+      (err, result) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        fulfill(result.rows);
       }
-      fulfill(result.rows);
-    });
+    );
   });
 };
 

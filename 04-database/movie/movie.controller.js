@@ -8,7 +8,10 @@ const movieController = express.Router();
 
 movieController.get('/', (req, res, next) => {
   movieService
-    .getMovies()
+    .getMovies({
+      limit: req.query.limit,
+      offset: req.query.offset,
+    })
     .then((movies) => res.json(movies))
     .catch((err) => next(err));
 });
